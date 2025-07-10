@@ -177,7 +177,64 @@ function initParallax() {
 }
 
 // ===== MOUSE FOLLOW EFFECT =====
-
+function initMouseFollowEffect() {
+  const cursor = document.createElement('div');
+  cursor.className = 'custom-cursor';
+  cursor.style.cssText = `
+    position: fixed;
+    width: 20px;
+    height: 20px;
+    background: var(--primary-color);
+    border-radius: 50%;
+    pointer-events: none;
+    z-index: 9999;
+    opacity: 0;
+    transition: opacity 0.3s ease;
+    mix-blend-mode: difference;
+  `;
+  document.body.appendChild(cursor);
+  
+  let mouseX = 0;
+  let mouseY = 0;
+  let cursorX = 0;
+  let cursorY = 0;
+  
+  document.addEventListener('mousemove', (e) => {
+    mouseX = e.clientX;
+    mouseY = e.clientY;
+    cursor.style.opacity = '1';
+  });
+  
+  document.addEventListener('mouseleave', () => {
+    cursor.style.opacity = '0';
+  });
+  
+  function animateCursor() {
+    cursorX += (mouseX - cursorX) * 0.1;
+    cursorY += (mouseY - cursorY) * 0.1;
+    
+    cursor.style.left = cursorX - 10 + 'px';
+    cursor.style.top = cursorY - 10 + 'px';
+    
+    requestAnimationFrame(animateCursor);
+  }
+  
+  animateCursor();
+  
+  // Hover effects
+  const hoverElements = document.querySelectorAll('a, button, .btn');
+  hoverElements.forEach(element => {
+    element.addEventListener('mouseenter', () => {
+      cursor.style.transform = 'scale(2)';
+      cursor.style.background = 'var(--secondary-color)';
+    });
+    
+    element.addEventListener('mouseleave', () => {
+      cursor.style.transform = 'scale(1)';
+      cursor.style.background = 'var(--primary-color)';
+    });
+  });
+}
 
 // ===== FLOATING ELEMENTS =====
 function initFloatingElements() {
